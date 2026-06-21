@@ -1,6 +1,7 @@
-#include <stdio.h>
+#include "utils.h"
 
 int main(void) {
-    printf("Hello, world!\n");
+    log_to_console(FATAL, "Build failed");
+    log_to_file(FATAL, "build/build.log", "Build failed");
     return 0;
 }
