@@ -1,0 +1,18 @@
+import "std";
+
+struct Test1 {
+    int field1;
+    int field2 = 5;
+    
+    void test() {
+        std.print("test\n");
+    }
+};
+
+int main(void) {
+    char *msg = "Hello, world!";
+    defer std.mem.free(msg);
+
+    std.print("%s\n", msg);
+    return 0;
+}
