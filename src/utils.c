@@ -1,5 +1,6 @@
 #include "utils.h"
 #include "arena.h"
+#include "ast.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -36,7 +37,7 @@ StringStream read_file(const char *path) {
     FILE *f = fopen(path, "rb");
     if (!f) {
         log_to_console(ERROR, "Could not open file for reading: %s", path);
-        log_to_file(ERROR, "build/build.log", "Could not open file for reading: %s", path);
+        log_to_file(ERROR, DEFAULT_LOG_PATH, "Could not open file for reading: %s", path);
         return ss;
     }
 
@@ -46,7 +47,7 @@ StringStream read_file(const char *path) {
 
     if (fsize < 0) {
         log_to_console(ERROR, "Could not read file size: %s", path);
-        log_to_file(ERROR, "build/build.log", "Could not read file size: %s", path);
+        log_to_file(ERROR, DEFAULT_LOG_PATH, "Could not read file size: %s", path);
         fclose(f);
         return ss;
     }
@@ -63,7 +64,7 @@ StringStream read_file(const char *path) {
 
     if (bytes_read < (size_t)fsize) {
         log_to_console(ERROR, "Failed to read entire file: %s", path);
-        log_to_file(ERROR, "build/build.log", "Failed to read entire file: %s", path);
+        log_to_file(ERROR, DEFAULT_LOG_PATH, "Failed to read entire file: %s", path);
         free(buf);
         fclose(f);
         return ss;
@@ -127,4 +128,36 @@ void log_to_file(LogLevel level, const char *path, const char *fmt, ...) {
 
     va_end(args);
     fclose(f);
+}
+
+void print_token() {
+    static const char *kws[] = {
+        // TODO: add other tokens as well
+        // KEYWORDS
+        [TOKEN_WHILE] = "TOKEN_WHILE",
+        [TOKEN_FOR] = "TOKEN_FOR",
+        [TOKEN_BREAK] = "TOKEN_BREAK",
+        [TOKEN_RETURN] = "TOKEN_RETURN",
+        [TOKEN_CONTINUE] = "TOKEN_CONTINUE",
+        [TOKEN_IF] = "TOKEN_IF",
+        [TOKEN_ELSE] = "TOKEN_ELSE",
+        [TOKEN_IMPORT] = "TOKEN_IMPORT",
+        [TOKEN_STATIC] = "TOKEN_STATIC",
+        [TOKEN_DEFER] = "TOKEN_DEFER",
+        [TOKEN_COMPTIME] = "TOKEN_COMPTIME",
+        [TOKEN_STRUCT] = "TOKEN_STRUCT",
+        [TOKEN_TYPE] = "TOKEN_TYPE",
+        [TOKEN_CONST] = "TOKEN_CONST",
+        [TOKEN_ENUM] = "TOKEN_ENUM",
+        [TOKEN_TRUE] = "TOKEN_TRUE",
+        [TOKEN_FALSE] = "TOKEN_FALSE",
+        // TYPES
+        [TOKEN_STRING] = "TOKEN_STRING",
+        [TOKEN_CHAR] = "TOKEN_CHAR",
+        [TOKEN_INT] = "TOKEN_INT",
+        [TOKEN_FLOAT] = "TOKEN_FLOAT",
+        [TOKEN_BOOL] = "TOKEN_BOOL",
+        [TOKEN_VOID] = "TOKEN_VOID",
+        [TOKEN_NULL] = "TOKEN_NULL",
+    };
 }

@@ -25,5 +25,9 @@ typedef enum {
     FATAL,
 } LogLevel;
 
+#define DEFAULT_LOG_PATH "build.log"
+
 void log_to_console(LogLevel level, const char *fmt, ...);
 void log_to_file(LogLevel level, const char *path, const char *fmt, ...);
+
+void print_token();
