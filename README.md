@@ -7,9 +7,9 @@ Vise - fast, embeddable, statically typed, compiled programming language
 
 ## Plans on improving C
 - No header files, they are meaningless
-- Decorators - built-in systax allowing to extend functionality and meaning of anything you want
-- OOP - crucial mistake of languages like C++ or Java, if you want it - you keep it simple
-- defer - the dream of C programmers, keyword that simplifies code readance while keeping its idea the same
+- Decorators - built-in syntax allowing to extend functionality and meaning of anything you want
+- Avoid the complexity of OOP from languages like C++ or Java, if you want it - you keep it simple
+- defer - the dream of C programmers, keyword that simplifies code readability while keeping its idea the same
 - Type aliasing - allows creating standalone types, this will help with keeping development of complex architectures by allowing you to customize types to read
 - Custom allocations - you will have a simplified version of malloc, that works the same, but provides better experience such as additional optional args for allocation behavior
 - import - since there are no macros you get a separate keyword to include modules somewhere
@@ -27,7 +27,7 @@ If you want to inherit something - you can attach decorator to a struct, this wa
 
 ### Clarifications on build scripts
 There are rust and zig as good examples of how build scripts should work, but in my opinion they are a bit more complicated, it feels like learning yet another part of the language.
-Vise build system will allow you to simply define what you want and when you wont from a compiler
+Vise build system will allow you to simply define what you want from a compiler
 
 ### Clarifications on std library
 Language should be more or less self-explorable, sure documentation can be a way to solve the problem, but thats not really convenient, far better is when you can simply try out different words in order to try hit the nail on the head.
@@ -90,7 +90,7 @@ const Flag = @tag("Flag");
 // @Extern can be used for single tag
 // or
 // @[Extern, Flag] for multiple tags
-// noone stops you from doing @[Extern] tho
+// no one stops you from doing @[Extern] tho
 void print_hello() {
     print("Hello, world!");
 }
@@ -181,3 +181,10 @@ void init() {} // this function is exported and can be accessed via state.init()
 Basic idea is:
 1. you can ExportAll if you know you will have to export a lot of things, but you can still mark something static to prevent its export
 2. you can Export idividual parts, this adds some readability complexity, but not really a big issue and you wont have to mark everything else as static
+
+### Naming
+In Vise just like in C you can pretty much do whatever you want, noone will force you to write what is "better", but there are some suggestions that will help in development:
+1. Variable naming
+- global constants should be named SCREAMING_SNAKE_CASE
+- local constants should be named snake_case
+- `TODO`
