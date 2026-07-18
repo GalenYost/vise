@@ -44,7 +44,7 @@ typedef enum {
     TOKEN_TRUE, TOKEN_FALSE,
 
     // TYPES
-    TOKEN_STRING, TOKEN_CHAR,
+    TOKEN_CHAR,
     TOKEN_INT, TOKEN_FLOAT,
     TOKEN_BOOL,
     TOKEN_VOID, TOKEN_NULL,
@@ -63,7 +63,7 @@ typedef enum {
 typedef enum {
     TYPE_VOID, TYPE_NULL,
     TYPE_INT, TYPE_FLOAT,
-    TYPE_CHAR, TYPE_STR,
+    TYPE_CHAR,
     TYPE_BOOL, TYPE_CUSTOM,
 } TypeKind;
 
@@ -79,3 +79,8 @@ typedef struct {
     size_t line;
     size_t col;
 } Token;
+
+// NODES
+typedef struct Node {
+    bool _export;
+} Node;

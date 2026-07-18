@@ -411,7 +411,6 @@ static Token identify_keyword(Lexer *lex) {
             else if (strncmp(lex->start, "import", 6) == 0) type = TOKEN_IMPORT;
             else if (strncmp(lex->start, "static", 6) == 0) type = TOKEN_STATIC;
             else if (strncmp(lex->start, "struct", 6) == 0) type = TOKEN_STRUCT;
-            else if (strncmp(lex->start, "string", 6) == 0) type = TOKEN_STRING;
             break;
         case 8:
             if (strncmp(lex->start, "continue", 8) == 0) type = TOKEN_CONTINUE;
