@@ -25,8 +25,8 @@ Vise - fast, embeddable, statically typed, compiled programming language
 
 For detailed explanations of Vise's design philosophy and internal features, please check out the `docs/` folder:
 
-*   [Language Features](docs/language_features.md): Deep dives into Decorators, Memory Allocators, Visibilty/Exports, and OOP differences.
-*   [Compiler Phases](docs/compiler_phases.md): Step-by-step breakdown of how the Vise compiler works internally.
+*   [Language Features](docs/features.md): Deep dives into Decorators, Memory Allocators, Visibilty/Exports, and OOP differences.
+*   [Compiler Phases](docs/compiler.md): Step-by-step breakdown of how the Vise compiler works internally.
 *   [Grammar](docs/grammar.md): Formal EBNF grammar definitions for the Vise language syntax.
 
 ### Naming
