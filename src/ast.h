@@ -81,6 +81,185 @@ typedef struct {
 } Token;
 
 // NODES
-typedef struct Node {
+typedef enum {
+    // DECLARATIONS
+    NODE_VAR_DECL,
+    NODE_FUNC_DECL,
+    NODE_STRUCT_DECL,
+
+    // STATEMENTS
+    NODE_BLOCK,
+    NODE_IF,
+    NODE_WHITE, NODE_FOR,
+    NODE_RETURN, NODE_BREAK,
+    NODE_CONTINUE,
+    NODE_DEFER,
+    NODE_EXPR_STMT,
+
+    // EXPRESSIONS
+    NODE_LITERAL,
+    NODE_IDENTIFIER,
+    NODE_BINOP,
+    NODE_UNARY,
+    NODE_CALL,
+    NODE_MEMBER_ACCESS,
+    NODE_INDEX,
+    NODE_STRUCT_INIT,
+    NODE_ARRAY_INIT,
+} NodeKind;
+
+typedef struct Node Node;
+
+typedef struct {
+    Node *left;
+    Node *right;
+    TokenType op;
+} BinOpNode;
+
+typedef struct {
+    Node *operand;
+    TokenType op;
+} UnaryNode;
+
+typedef struct {
+    Token token;
+} LiteralNode;
+
+typedef struct {
+    Token name;
+} IdentifierNode;
+
+typedef struct {
+    Node **statements;
+    size_t count;
+} BlockNode;
+
+typedef struct {
+    Node *condition;
+    Node *then_branch;
+    Node *else_branch;
+} IfNode;
+
+typedef struct {
+    Node *condition;
+    Node *body;
+} WhileNode;
+
+typedef struct {
+    Node *init;
+    Node *condition;
+    Node *increment;
+    Node *body;
+} ForNode;
+
+typedef struct {
+    Node *expr;
+} ReturnNode;
+
+typedef struct {
+    Node *stmt;
+} DeferNode;
+
+typedef struct {
+    Node *expr;
+} ExprStmtNode;
+
+typedef struct {
+    Token name;
+    DataType type;
+    Node *initializer; // Can be NULL
+    bool is_const;
+    bool is_static;
+} VarDeclNode;
+
+typedef struct {
+    Token name;
+    DataType return_type;
+    Node **params; // Array of VarDeclNodes
+    size_t param_count;
+    Node *body;
+    bool is_comptime;
+} FuncDeclNode;
+
+typedef struct {
+    Token name;
+    Node **fields; // Array of VarDeclNodes and FuncDeclNodes
+    size_t field_count;
+} StructDeclNode;
+
+typedef struct {
+    Token name;
+    Token *variants; // Array of identifier tokens
+    size_t variant_count;
+} EnumDeclNode;
+
+typedef struct {
+    Token alias_name;
+    DataType target_type;
+} TypeDeclNode;
+
+typedef struct {
+    StringStream path;
+} ImportNode;
+
+typedef struct {
+    Node *callee;
+    Node **args;
+    size_t arg_count;
+} CallNode;
+
+typedef struct {
+    Node *object;
+    Token property;
+} MemberAccessNode;
+
+typedef struct {
+    Node *array;
+    Node *index;
+} IndexNode;
+
+typedef struct {
+    Token type_name;
+    Token *field_names;
+    Node **field_values;
+    size_t field_count;
+} StructInitNode;
+
+typedef struct {
+    Node **elements;
+    size_t element_count;
+} ArrayInitNode;
+
+struct Node {
+    NodeKind kind;
+    size_t line;
+    size_t col;
     bool _export;
-} Node;
+    
+    union {
+        BinOpNode binop;
+        UnaryNode unary;
+        LiteralNode literal;
+        IdentifierNode identifier;
+        BlockNode block;
+        IfNode if_stmt;
+        WhileNode while_stmt;
+        ForNode for_stmt;
+        ReturnNode return_stmt;
+        DeferNode defer_stmt;
+        ExprStmtNode expr_stmt;
+        VarDeclNode var_decl;
+        FuncDeclNode func_decl;
+        StructDeclNode struct_decl;
+        EnumDeclNode enum_decl;
+        TypeDeclNode type_decl;
+        ImportNode import_stmt;
+        CallNode call;
+        MemberAccessNode member_access;
+        IndexNode index;
+        StructInitNode struct_init;
+        ArrayInitNode array_init;
+    } as;
+    bool _comptime;
+    Node *next;
+};
