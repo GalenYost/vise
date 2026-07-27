@@ -267,6 +267,7 @@ static Token identify_symbols_and_operators(Lexer *lex) {
             if (lexer_match(lex, '=')) {
                 t.type = TOKEN_NOT_EQ;
             } else t.type = TOKEN_BANG;
+            break;
         }
         case '|': {
             if (lexer_match(lex, '|')) {
