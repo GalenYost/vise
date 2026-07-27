@@ -9,11 +9,13 @@ There are rust and zig as good examples of how build scripts should work, but in
 Vise build system will allow you to simply define what you want from a compiler
 
 ### Clarifications on std library
-Language should be more or less self-explorable, sure documentation can be a way to solve the problem, but thats not really convenient, far better is when you can simply try out different words in order to try hit the nail on the head.
-So basically, instead of having whole std in different files like in C/C++, as well as having huge different complicated long names like in Java, Vise will provide more or less simple and easy to figure out names.
 
-#### A few examples:
-1. Hashmap - a high-efficiency, commonly used container to store complex data
+A language should be self-explorable — you shouldn't need documentation just to figure out what a name means.
+Instead of huge files like in C/C++ or long complicated names like in Java, Vise uses simple, self-explanatory module paths.
+
+#### Examples
+
+**C++** — not really self-explorable without docs:
 ```cpp
 #include <unordered_map>
 
@@ -21,8 +23,8 @@ int main(void) {
     std::unordered_map<string, string> names;
 }
 ```
-Not really self-explorable and understandable without a documentation if you ask me
 
+**Java** — better, but still verbose:
 ```java
 import java.util.HashMap;
 
@@ -32,8 +34,8 @@ public class Main {
     }
 }
 ```
-That's better, but there is still room for improvements, Zig is actually a perfect example, but it has different allocators and so self-exploration is still being dropped dramatically:
-Rust is also a nice example:
+
+**Rust** — nice and simple:
 ```rs
 use std::collections::HashMap;
 
@@ -41,8 +43,8 @@ fn main() {
     let map: HashMap<&str, &str> = HashMap::new();
 }
 ```
-Nice and simple.
-But Vise takes C as a simplicity standard, so we can do even better:
+
+**Vise** — takes C as a simplicity standard, goes even further:
 ```vz
 import std.collections.HashMap;
 
@@ -50,7 +52,8 @@ int main(void) {
     HashMap<char*, char*> map = HashMap.new();
 }
 ```
-So basically it will combine simplicity of C, "more modern simplicity" of Java and self-explanatory names of Rust
+
+Vise combines the simplicity of C, the modern readability of Java, and the self-explanatory naming of Rust.
 
 ### Clarifications on decorators
 Basically decorators are macros in a way, but they operate on nodes, not strings, and the type checker runs downstream of
