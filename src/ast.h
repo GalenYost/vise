@@ -1,5 +1,8 @@
 #pragma once
 #include "utils.h"
+#include "arena.h"
+
+#include <stdbool.h>
 
 typedef enum {
     // SYMBOLS
@@ -86,6 +89,7 @@ typedef enum {
     NODE_VAR_DECL,
     NODE_FUNC_DECL,
     NODE_STRUCT_DECL,
+    NODE_ENUM_DECL,
 
     // STATEMENTS
     NODE_BLOCK,
@@ -95,6 +99,7 @@ typedef enum {
     NODE_CONTINUE,
     NODE_DEFER,
     NODE_EXPR_STMT,
+    NODE_IMPORT,
 
     // EXPRESSIONS
     NODE_LITERAL,
@@ -175,7 +180,7 @@ typedef struct {
 typedef struct {
     Token name;
     DataType return_type;
-    Node **params; // Array of VarDeclNodes
+    Node *params; // Linked list
     size_t param_count;
     Node *body;
     bool is_comptime;
@@ -183,13 +188,13 @@ typedef struct {
 
 typedef struct {
     Token name;
-    Node **fields; // Array of VarDeclNodes and FuncDeclNodes
+    Node *fields; // Linked list
     size_t field_count;
 } StructDeclNode;
 
 typedef struct {
     Token name;
-    Token *variants; // Array of identifier tokens
+    Node *variants; // Linked list
     size_t variant_count;
 } EnumDeclNode;
 
@@ -235,7 +240,8 @@ struct Node {
     size_t line;
     size_t col;
     bool _export;
-    
+    const char *path;
+
     union {
         BinOpNode binop;
         UnaryNode unary;
@@ -263,3 +269,5 @@ struct Node {
     bool _comptime;
     Node *next;
 };
+
+Node *node_new(Arena *a, NodeKind kind, size_t line, size_t col, const char *path);
