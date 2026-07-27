@@ -152,7 +152,6 @@ void print_token() {
         [TOKEN_TRUE] = "TOKEN_TRUE",
         [TOKEN_FALSE] = "TOKEN_FALSE",
         // TYPES
-        [TOKEN_STRING] = "TOKEN_STRING",
         [TOKEN_CHAR] = "TOKEN_CHAR",
         [TOKEN_INT] = "TOKEN_INT",
         [TOKEN_FLOAT] = "TOKEN_FLOAT",

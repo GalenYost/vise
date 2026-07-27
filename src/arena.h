@@ -8,5 +8,7 @@ typedef struct Arena {
     size_t offset;
 } Arena;
 
+Arena arena_new(size_t cap);
 void *arena_alloc(Arena *a, size_t size);
 void arena_clear(Arena *a);
+void arena_free(Arena *a);
