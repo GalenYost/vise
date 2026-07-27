@@ -16,15 +16,9 @@ int main(void) {
 
     Node *cur = parser_next(&p);
     while (cur) {
-        switch (cur->kind) {
-            case NODE_IMPORT: {
-                char *ss_dumped = sstream_to_cstr(&a, cur->as.import_stmt.path);
-                printf("%zu:%zu; import: %s\n", cur->line, cur->col, ss_dumped);
-                break;
-            };
-            default: break;
-        }
-        cur = parser_next(&p);
+        print_node(cur);
+        break;
+        // cur = parser_next(&p);
     }
 
     arena_free(&a);

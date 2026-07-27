@@ -1,13 +1,16 @@
 #pragma once
+
 #include <stdarg.h>
 #include <stddef.h>
-
-typedef struct Arena Arena;
 
 typedef struct {
     char *data;
     size_t len;
 } StringStream;
+
+typedef struct Arena Arena;
+typedef struct Token Token;
+typedef struct Node Node;
 
 StringStream sstream_new(char *str);
 
@@ -30,4 +33,11 @@ typedef enum {
 void log_to_console(LogLevel level, const char *fmt, ...);
 void log_to_file(LogLevel level, const char *path, const char *fmt, ...);
 
-void print_token();
+#define LOG(level, ...) \
+    do { \
+        log_to_console(level, __VA_ARGS__); \
+        log_to_file(level, DEFAULT_LOG_PATH, __VA_ARGS__); \
+    } while (0)
+
+void print_token(Token t);
+void print_node(Node *n);

@@ -36,8 +36,7 @@ StringStream read_file(const char *path) {
 
     FILE *f = fopen(path, "rb");
     if (!f) {
-        log_to_console(ERROR, "Could not open file for reading: %s", path);
-        log_to_file(ERROR, DEFAULT_LOG_PATH, "Could not open file for reading: %s", path);
+        LOG(ERROR, "Could not open file for reading: %s", path);
         return ss;
     }
 
@@ -46,8 +45,7 @@ StringStream read_file(const char *path) {
     fseek(f, 0, SEEK_SET);
 
     if (fsize < 0) {
-        log_to_console(ERROR, "Could not read file size: %s", path);
-        log_to_file(ERROR, DEFAULT_LOG_PATH, "Could not read file size: %s", path);
+        LOG(ERROR, "Could not read file size: %s", path);
         fclose(f);
         return ss;
     }
@@ -55,7 +53,7 @@ StringStream read_file(const char *path) {
     char *buf = (char*)malloc(fsize + 1);
 
     if (!buf) {
-        log_to_console(FATAL, "Could not allocate %ld bytes to read file %s", fsize, path);
+        LOG(FATAL, "Could not allocate %ld bytes to read file %s", fsize, path);
         fclose(f);
         exit(1);
     }
@@ -63,8 +61,7 @@ StringStream read_file(const char *path) {
     size_t bytes_read = fread(buf, 1, fsize, f);
 
     if (bytes_read < (size_t)fsize) {
-        log_to_console(ERROR, "Failed to read entire file: %s", path);
-        log_to_file(ERROR, DEFAULT_LOG_PATH, "Failed to read entire file: %s", path);
+        LOG(ERROR, "Failed to read entire file: %s", path);
         free(buf);
         fclose(f);
         return ss;
@@ -79,8 +76,8 @@ StringStream read_file(const char *path) {
     return ss;
 }
 
-#define CONSOLE_PREFIX_FMT "[%s%s%s]: "
-#define FILE_PREFIX_FMT "[%s]: "
+#define CONSOLE_PREFIX_FMT "[%s%s%s] "
+#define FILE_PREFIX_FMT "[%s] "
 
 #define CYAN "\033[36m"
 #define RED "\033[91m"
@@ -130,9 +127,59 @@ void log_to_file(LogLevel level, const char *path, const char *fmt, ...) {
     fclose(f);
 }
 
-void print_token() {
-    static const char *kws[] = {
-        // TODO: add other tokens as well
+void print_token(Token t) {
+    static const char *words[] = {
+        // SYMBOLS
+        [TOKEN_PLUS] = "TOKEN_PLUS",
+        [TOKEN_MINUS] = "TOKEN_MINUS",
+        [TOKEN_STAR] = "TOKEN_STAR",
+        [TOKEN_SLASH] = "TOKEN_SLASH",
+        [TOKEN_EQ] = "TOKEN_EQ",
+        [TOKEN_PAREN_LEFT] = "TOKEN_PAREN_LEFT",
+        [TOKEN_PAREN_RIGHT] = "TOKEN_PARENT_RIGHT",
+        [TOKEN_BRACE_LEFT] = "TOKEN_BRACE_LEFT",
+        [TOKEN_BRACE_RIGHT] = "TOKEN_BRACE_RIGHT",
+        [TOKEN_CURLY_LEFT] = "TOKEN_CURLY_LEFT",
+        [TOKEN_CURLY_RIGHT] = "TOKEN_CURLY_RIGHT",
+        [TOKEN_BANG] = "TOKEN_BANG",
+        [TOKEN_AT] = "TOKEN_AT",
+        [TOKEN_HASH] = "TOKEN_HASH",
+        [TOKEN_DOLLAR] = "TOKEN_DOLLAR",
+        [TOKEN_PERCENT] = "TOKEN_PERCENT",
+        [TOKEN_QUOTE] = "TOKEN_QUOTE",
+        [TOKEN_DOUBLE_QUOTE] = "TOKEN_DOUBLE_QUOTE",
+        [TOKEN_QUESTION] = "TOKEN_QUESTION",
+        [TOKEN_COMMA] = "TOKEN_COMMA",
+        [TOKEN_SEMI] = "TOKEN_SEMI",
+        [TOKEN_COLON] = "TOKEN_COLON",
+        [TOKEN_DOT] = "TOKEN_DOT",
+        // OPERATORS
+        [TOKEN_PLUS_PLUS] = "TOKEN_PLUS_PLUS",
+        [TOKEN_PLUS_EQ] = "TOKEN_PLUS_EQ",
+        [TOKEN_MINUS_MINUS] = "TOKEN_MINUS_MINUS",
+        [TOKEN_MINUS_EQ] = "TOKEN_MINUS_EQ",
+        [TOKEN_MULTI_EQ] = "TOKEN_MULTI_EQ",
+        [TOKEN_DIV_EQ] = "TOKEN_DIV_EQ",
+        [TOKEN_EQ_EQ] = "TOKEN_EQ_EQ",
+        [TOKEN_NOT_EQ] = "TOKEN_NOT_EQ",
+        [TOKEN_LT] = "TOKEN_LT",
+        [TOKEN_LT_EQ] = "TOKEN_LT_EQ",
+        [TOKEN_GT] = "TOKEN_GT",
+        [TOKEN_GT_EQ] = "TOKEN_GT_EQ",
+        [TOKEN_POW] = "TOKEN_POW",
+        [TOKEN_XOR] = "TOKEN_XOR",
+        [TOKEN_LOGICAL_AND] = "TOKEN_LOGICAL_AND",
+        [TOKEN_LOGICAL_OR] = "TOKEN_LOGICAL_OR",
+        [TOKEN_BIT_OR] = "TOKEN_BIT_OR",
+        [TOKEN_BIT_OR_EQ] = "TOKEN_BIT_OR_EQ",
+        [TOKEN_BIT_AND] = "TOKEN_BIT_AND",
+        [TOKEN_BIT_AND_EQ] = "TOKEN_BIT_AND_EQ",
+        [TOKEN_SHIFT_LEFT] = "TOKEN_SHIFT_LEFT",
+        [TOKEN_SHIFT_LEFT_EQ] = "TOKEN_SHIFT_LEFT_EQ",
+        [TOKEN_SHIFT_RIGHT] = "TOKEN_SHIFT_RIGHT",
+        [TOKEN_SHIFT_RIGHT_EQ] = "TOKEN_SHIFT_RIGHT_EQ",
+        [TOKEN_BIT_NOT] = "TOKEN_BIT_NOT",
+        [TOKEN_XOR_EQ] = "TOKEN_XOR_EQ",
         // KEYWORDS
         [TOKEN_WHILE] = "TOKEN_WHILE",
         [TOKEN_FOR] = "TOKEN_FOR",
@@ -158,5 +205,62 @@ void print_token() {
         [TOKEN_BOOL] = "TOKEN_BOOL",
         [TOKEN_VOID] = "TOKEN_VOID",
         [TOKEN_NULL] = "TOKEN_NULL",
+        // LITERALS
+        [TOKEN_LIT_STR] = "TOKEN_LIT_STR",
+        [TOKEN_LIT_CHAR] = "TOKEN_LIT_CHAR",
+        [TOKEN_LIT_INT] = "TOKEN_LIT_INT",
+        [TOKEN_LIT_FLOAT] = "TOKEN_LIT_FLOAT",
+        [TOKEN_IDENT] = "TOKEN_IDENT",
+        // OTHER
+        [TOKEN_EOF] = "TOKEN_EOF",
+        [TOKEN_UNKNOWN] = "TOKEN_UNKNOWN",
     };
+
+    if (t.type >= TOKEN_PLUS && t.type < TOKEN_COUNT) {
+        Arena a = arena_new(1024);
+        LOG(INFO, "%zu:%zu : %s(%s)", t.line, t.col, words[t.type], sstream_to_cstr(&a, t.view));
+        return;
+    }
+
+    LOG(ERROR, "Token does not exist: %d", t.type);
+}
+
+void print_node(Node *n) {
+    static const char *words[] = {
+        // DECLARATIONS
+        [NODE_VAR_DECL] = "NODE_VAR_DECL",
+        [NODE_FUNC_DECL] = "NODE_FUNC_DECL",
+        [NODE_STRUCT_DECL] = "NODE_STRUCT_DECL",
+        [NODE_ENUM_DECL] = "NODE_ENUM_DECL",
+        // STATEMENTS
+        [NODE_BLOCK] = "NODE_BLOCK",
+        [NODE_IF] = "NODE_IF",
+        [NODE_WHITE] = "NODE_WHITE",
+        [NODE_FOR] = "NODE_FOR",
+        [NODE_RETURN] = "NODE_RETURN",
+        [NODE_BREAK] = "NODE_BREAK",
+        [NODE_CONTINUE] = "NODE_CONTINUE",
+        [NODE_DEFER] = "NODE_DEFER",
+        [NODE_EXPR_STMT] = "NODE_EXPR_STMT",
+        [NODE_IMPORT] = "NODE_IMPORT",
+        // EXPRESSIONS
+        [NODE_LITERAL] = "NODE_LITERAL",
+        [NODE_IDENTIFIER] = "NODE_IDENTIFIER",
+        [NODE_BINOP] = "NODE_BINOP",
+        [NODE_UNARY] = "NODE_UNARY",
+        [NODE_CALL] = "NODE_CALL",
+        [NODE_MEMBER_ACCESS] = "NODE_MEMBER_ACCESS",
+        [NODE_INDEX] = "NODE_INDEX",
+        [NODE_STRUCT_INIT] = "NODE_STRUCT_INIT",
+        [NODE_ARRAY_INIT] = "NODE_ARRAY_INIT",
+    };
+
+    if (n->kind >= NODE_VAR_DECL && n->kind < NODE_COUNT) {
+        // TODO: maybe add a helper function to print the whole tree
+        Arena a = arena_new(1024);
+        LOG(INFO, "%zu:%zu @ %s : %s", n->line, n->col, n->path, words[n->kind]);
+        return;
+    }
+
+    LOG(ERROR, "Node does not exist: %d", n->kind);
 }
