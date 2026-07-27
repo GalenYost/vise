@@ -181,8 +181,15 @@ static Node *parse_enum_decl(Parser *p) {
     return n;
 }
 
-static Node *parse_type_decl(Parser *p);
-static Node *parse_var_or_func_decl(Parser *p);
+static Node *parse_type_decl(Parser *p) {
+    // TODO
+    return NULL;
+}
+
+static Node *parse_var_or_func_decl(Parser *p) {
+    // TODO
+    return NULL;
+}
 
 Parser parser_new(Lexer *lex, Arena *a, const char *path) {
     Parser p = (Parser) {
