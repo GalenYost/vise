@@ -95,7 +95,7 @@ static Node *parse_import_decl(Parser *p) {
 
     parser_consume(p, TOKEN_SEMI, "Expected ';' after import path");
 
-    Node *n = node_new(p->a, NODE_IMPORT, ident.line, ident.col, p->src_path);
+    Node *n = node_new(p->a, NODE_IMPORT, p->prev.line, p->prev.col, p->src_path);
     n->as.import_stmt.path.data = (char *)start_ptr;
     n->as.import_stmt.path.len = (size_t)(end_ptr - start_ptr);
     return n;
@@ -105,7 +105,7 @@ static Node *parse_struct_decl(Parser *p) {
     Token struct_name = parser_consume(p, TOKEN_IDENT, "Expected struct name");
     if (p->errored) return NULL;
 
-    Node *n = node_new(p->a, NODE_STRUCT_DECL, struct_name.line, struct_name.col, p->src_path);
+    Node *n = node_new(p->a, NODE_STRUCT_DECL, p->prev.line, p->prev.col, p->src_path);
     n->as.struct_decl.name = struct_name;
 
     parser_consume(p, TOKEN_CURLY_LEFT, "Expected '{' before struct declaration");
@@ -145,7 +145,7 @@ static Node *parse_enum_decl(Parser *p) {
     Token enum_name = parser_consume(p, TOKEN_IDENT, "Expected enum identifier");
     if (p->errored) return NULL;
 
-    Node *n = node_new(p->a, NODE_ENUM_DECL, p->curr.line, p->curr.col, p->src_path);
+    Node *n = node_new(p->a, NODE_ENUM_DECL, p->prev.line, p->prev.col, p->src_path);
     n->as.enum_decl.name = enum_name;
 
     parser_consume(p, TOKEN_CURLY_LEFT, "Expected '{' before enum declaration");
