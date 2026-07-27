@@ -1,8 +1,37 @@
 #pragma once
-#include "utils.h"
-#include "arena.h"
 
 #include <stdbool.h>
+#include <stdlib.h>
+
+#include "utils.h"
+
+typedef struct Arena Arena;
+typedef struct Token Token;
+typedef struct Node Node;
+typedef struct DataType DataType;
+
+typedef struct BinOpNode BinOpNode;
+typedef struct UnaryNode UnaryNode;
+typedef struct LiteralNode LiteralNode;
+typedef struct IdentifierNode IdentifierNode;
+typedef struct BlockNode BlockNode;
+typedef struct IfNode IfNode;
+typedef struct WhileNode WhileNode;
+typedef struct ForNode ForNode;
+typedef struct ReturnNode ReturnNode;
+typedef struct DeferNode DeferNode;
+typedef struct ExprStmtNode ExprStmtNode;
+typedef struct VarDeclNode VarDeclNode;
+typedef struct FuncDeclNode FuncDeclNode;
+typedef struct StructDeclNode StructDeclNode;
+typedef struct EnumDeclNode EnumDeclNode;
+typedef struct TypeDeclNode TypeDeclNode;
+typedef struct ImportNode ImportNode;
+typedef struct CallNode CallNode;
+typedef struct MemberAccessNode MemberAccessNode;
+typedef struct IndexNode IndexNode;
+typedef struct StructInitNode StructInitNode;
+typedef struct ArrayInitNode ArrayInitNode;
 
 typedef enum {
     // SYMBOLS
@@ -70,18 +99,18 @@ typedef enum {
     TYPE_BOOL, TYPE_CUSTOM,
 } TypeKind;
 
-typedef struct {
+struct DataType {
     TypeKind kind;
     StringStream name;
     int pointer_depth;
-} DataType;
+};
 
-typedef struct {
+struct Token {
     TokenType type;
     StringStream view;
     size_t line;
     size_t col;
-} Token;
+};
 
 // NODES
 typedef enum {
@@ -111,129 +140,130 @@ typedef enum {
     NODE_INDEX,
     NODE_STRUCT_INIT,
     NODE_ARRAY_INIT,
+
+    // OTHER
+    NODE_COUNT
 } NodeKind;
 
-typedef struct Node Node;
-
-typedef struct {
+struct BinOpNode {
     Node *left;
     Node *right;
     TokenType op;
-} BinOpNode;
+};
 
-typedef struct {
+struct UnaryNode {
     Node *operand;
     TokenType op;
-} UnaryNode;
+};
 
-typedef struct {
+struct LiteralNode {
     Token token;
-} LiteralNode;
+};
 
-typedef struct {
+struct IdentifierNode {
     Token name;
-} IdentifierNode;
+};
 
-typedef struct {
+struct BlockNode {
     Node **statements;
     size_t count;
-} BlockNode;
+};
 
-typedef struct {
+struct IfNode {
     Node *condition;
     Node *then_branch;
     Node *else_branch;
-} IfNode;
+};
 
-typedef struct {
+struct WhileNode {
     Node *condition;
     Node *body;
-} WhileNode;
+};
 
-typedef struct {
+struct ForNode {
     Node *init;
     Node *condition;
     Node *increment;
     Node *body;
-} ForNode;
+};
 
-typedef struct {
+struct ReturnNode {
     Node *expr;
-} ReturnNode;
+};
 
-typedef struct {
+struct DeferNode {
     Node *stmt;
-} DeferNode;
+};
 
-typedef struct {
+struct ExprStmtNode {
     Node *expr;
-} ExprStmtNode;
+};
 
-typedef struct {
+struct VarDeclNode {
     Token name;
     DataType type;
     Node *initializer; // Can be NULL
     bool is_const;
     bool is_static;
-} VarDeclNode;
+};
 
-typedef struct {
+struct FuncDeclNode {
     Token name;
     DataType return_type;
     Node *params; // Linked list
     size_t param_count;
     Node *body;
     bool is_comptime;
-} FuncDeclNode;
+};
 
-typedef struct {
+struct StructDeclNode {
     Token name;
     Node *fields; // Linked list
     size_t field_count;
-} StructDeclNode;
+};
 
-typedef struct {
+struct EnumDeclNode {
     Token name;
     Node *variants; // Linked list
     size_t variant_count;
-} EnumDeclNode;
+};
 
-typedef struct {
+struct TypeDeclNode {
     Token alias_name;
     DataType target_type;
-} TypeDeclNode;
+};
 
-typedef struct {
+struct ImportNode {
     StringStream path;
-} ImportNode;
+};
 
-typedef struct {
+struct CallNode {
     Node *callee;
     Node **args;
     size_t arg_count;
-} CallNode;
+};
 
-typedef struct {
+struct MemberAccessNode {
     Node *object;
     Token property;
-} MemberAccessNode;
+};
 
-typedef struct {
+struct IndexNode {
     Node *array;
     Node *index;
-} IndexNode;
+};
 
-typedef struct {
+struct StructInitNode {
     Token type_name;
     Token *field_names;
     Node **field_values;
     size_t field_count;
-} StructInitNode;
+};
 
-typedef struct {
+struct ArrayInitNode {
     Node **elements;
     size_t element_count;
-} ArrayInitNode;
+};
 
 struct Node {
     NodeKind kind;
