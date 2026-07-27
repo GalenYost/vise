@@ -25,8 +25,8 @@ static void parser_error(Parser *p, const char *err) {
 
     p->errored = true;
     p->panic_mode = true;
-    log_to_console(ERROR, "%s:%zu:%zu: %s", p->src_path, p->curr.line, p->curr.col, err);
-    log_to_file(ERROR, DEFAULT_LOG_PATH, "%s:%zu:%zu: %s", p->src_path, p->curr.line, p->curr.col, err);
+
+    LOG(ERROR, "%s:%zu:%zu: %s", p->src_path, p->curr.line, p->curr.col, err);
 }
 
 static void parser_synchronize(Parser *p) {
@@ -80,6 +80,7 @@ static bool parser_match(Parser *p, TokenType type) {
 }
 
 static Node *parse_import_decl(Parser *p) {
+    Token kw = p->prev;
     Token ident = parser_consume(p, TOKEN_IDENT, "Expected import path");
     if (p->errored) return NULL;
 
@@ -95,17 +96,18 @@ static Node *parse_import_decl(Parser *p) {
 
     parser_consume(p, TOKEN_SEMI, "Expected ';' after import path");
 
-    Node *n = node_new(p->a, NODE_IMPORT, p->prev.line, p->prev.col, p->src_path);
+    Node *n = node_new(p->a, NODE_IMPORT, kw.line, kw.col, p->src_path);
     n->as.import_stmt.path.data = (char *)start_ptr;
     n->as.import_stmt.path.len = (size_t)(end_ptr - start_ptr);
     return n;
 }
 
 static Node *parse_struct_decl(Parser *p) {
+    Token kw = p->prev;
     Token struct_name = parser_consume(p, TOKEN_IDENT, "Expected struct name");
     if (p->errored) return NULL;
 
-    Node *n = node_new(p->a, NODE_STRUCT_DECL, p->prev.line, p->prev.col, p->src_path);
+    Node *n = node_new(p->a, NODE_STRUCT_DECL, kw.line, kw.col, p->src_path);
     n->as.struct_decl.name = struct_name;
 
     parser_consume(p, TOKEN_CURLY_LEFT, "Expected '{' before struct declaration");
@@ -142,10 +144,11 @@ static Node *parse_struct_decl(Parser *p) {
 }
 
 static Node *parse_enum_decl(Parser *p) {
+    Token kw = p->prev;
     Token enum_name = parser_consume(p, TOKEN_IDENT, "Expected enum identifier");
     if (p->errored) return NULL;
 
-    Node *n = node_new(p->a, NODE_ENUM_DECL, p->prev.line, p->prev.col, p->src_path);
+    Node *n = node_new(p->a, NODE_ENUM_DECL, kw.line, kw.col, p->src_path);
     n->as.enum_decl.name = enum_name;
 
     parser_consume(p, TOKEN_CURLY_LEFT, "Expected '{' before enum declaration");

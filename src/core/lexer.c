@@ -475,26 +475,29 @@ Token lexer_next(Lexer *lex) {
     skip_whitespace(lex);
     lex->start = lex->current;
 
+    size_t start_line = lex->line;
+    size_t start_col = lex->col;
+
     if (is_at_end(lex)) {
         return (Token){ .type = TOKEN_EOF, .line = lex->line, .col = lex->col, .view = {0} };
     }
 
     char c = lexer_peek(lex);
 
+    Token t;
     if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || c == '_') {
-        return identify_keyword(lex);
+        t = identify_keyword(lex);
+    } else if (is_digit(c)) {
+        t = identify_number(lex);
+    } else if (c == '"') {
+        t = lex_string(lex);
+    } else if (c == '\'') {
+        t = lex_char(lex);
+    } else {
+        t = identify_symbols_and_operators(lex);
     }
 
-    if (is_digit(c)) {
-        return identify_number(lex);
-    }
-
-    if (c == '"') {
-        return lex_string(lex);
-    }
-    if (c == '\'') {
-        return lex_char(lex);
-    }
-
-    return identify_symbols_and_operators(lex);
+    t.line = start_line;
+    t.col = start_col;
+    return t;
 }
