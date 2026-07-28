@@ -4,8 +4,6 @@
 #include "arena.h"
 #include "utils.h"
 
-#include <stdio.h>
-
 int main(void) {
     const char *file_path = "main.vz";
     StringStream ss = read_file(file_path);
@@ -17,8 +15,7 @@ int main(void) {
     Node *cur = parser_next(&p);
     while (cur) {
         print_node(cur);
-        break;
-        // cur = parser_next(&p);
+        cur = parser_next(&p);
     }
 
     arena_free(&a);

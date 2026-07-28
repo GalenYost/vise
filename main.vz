@@ -3,7 +3,7 @@ import std;
 struct Test1 {
     int field1;
     int field2 = 5;
-    
+
     void test() {
         std.io.print("test\n");
     }

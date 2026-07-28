@@ -6,6 +6,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+static void print_node_recursive(Node *n);
+
 StringStream sstream_new(char *str) {
     return (StringStream) {
         .data = str,
@@ -225,7 +227,7 @@ void print_token(Token t) {
     LOG(ERROR, "Token does not exist: %d", t.type);
 }
 
-void print_node(Node *n) {
+static void print_node_recursive(Node *n) {
     static const char *words[] = {
         // DECLARATIONS
         [NODE_VAR_DECL] = "NODE_VAR_DECL",
@@ -256,11 +258,21 @@ void print_node(Node *n) {
     };
 
     if (n->kind >= NODE_VAR_DECL && n->kind < NODE_COUNT) {
-        // TODO: maybe add a helper function to print the whole tree
-        Arena a = arena_new(1024);
         LOG(INFO, "%zu:%zu @ %s : %s", n->line, n->col, n->path, words[n->kind]);
+
+        // TODO: implement proper printing with names / identifiers / other things
+        if (n->next) {
+            LOG(INFO, "--- Node linked list print start ---");
+            print_node_recursive(n->next);
+        } else {
+            LOG(INFO, "--- Node linked list print end ---");
+        }
         return;
     }
 
     LOG(ERROR, "Node does not exist: %d", n->kind);
+}
+
+void print_node(Node *n) {
+    print_node_recursive(n);
 }
