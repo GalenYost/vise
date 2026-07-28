@@ -1,5 +1,9 @@
 import std;
 
+type PlayerID = int;
+type PlayerIDArray = int[];
+type PlayerIDArrayV2 = int*;
+
 struct Test1 {
     int field1;
     int field2 = 5;

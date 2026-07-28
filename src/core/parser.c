@@ -20,6 +20,9 @@ static Node *parse_enum_decl(Parser *p);
 static Node *parse_type_decl(Parser *p);
 static Node *parse_var_or_func_decl(Parser *p);
 
+// parse types e.g int, int**, char, void* etc
+static DataType parse_type(Parser *p);
+
 static void parser_error(Parser *p, const char *err) {
     if (p->panic_mode) return;
 
@@ -184,9 +187,56 @@ static Node *parse_enum_decl(Parser *p) {
     return n;
 }
 
+static DataType parse_type(Parser *p) {
+    DataType dt = {0};
+
+    if (parser_match(p, TOKEN_INT)) {
+        dt.kind = TYPE_INT;
+    } else if (parser_match(p, TOKEN_CHAR)) {
+        dt.kind = TYPE_CHAR;
+    } else if (parser_match(p, TOKEN_FLOAT)) {
+        dt.kind = TYPE_FLOAT;
+    } else if (parser_match(p, TOKEN_BOOL)) {
+        dt.kind = TYPE_BOOL;
+    } else if (parser_match(p, TOKEN_VOID)) {
+        dt.kind = TYPE_VOID;
+    } else if (parser_match(p, TOKEN_NULL)) {
+        dt.kind = TYPE_NULL;
+    } else {
+        Token ident = parser_consume(p, TOKEN_IDENT, "Expected type name");
+        dt.kind = TYPE_CUSTOM;
+        dt.name = ident.view;
+    }
+
+    while (parser_match(p, TOKEN_STAR)) {
+        dt.pointer_depth++;
+    }
+
+    if (parser_match(p, TOKEN_BRACE_LEFT)) {
+        parser_consume(p, TOKEN_BRACE_RIGHT, "Expected ']' after '['");
+    }
+
+    return dt;
+}
+
 static Node *parse_type_decl(Parser *p) {
-    // TODO
-    return NULL;
+    Token kw = p->prev;
+
+    Token alias_name = parser_consume(p, TOKEN_IDENT, "Expected alias identifier name");
+    if (p->errored) return NULL;
+
+    parser_consume(p, TOKEN_EQ, "Expected '=' after alias name");
+    if (p->errored) return NULL;
+
+    DataType target = parse_type(p);
+    if (p->errored) return NULL;
+
+    parser_consume(p, TOKEN_SEMI, "Expected ';' after type alias declaration");
+
+    Node *n = node_new(p->a, NODE_TYPE_DECL, kw.line, kw.col, p->src_path);
+    n->as.type_decl.alias_name = alias_name;
+    n->as.type_decl.target_type = target;
+    return n;
 }
 
 static Node *parse_var_or_func_decl(Parser *p) {

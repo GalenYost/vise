@@ -234,6 +234,7 @@ static void print_node_recursive(Node *n) {
         [NODE_FUNC_DECL] = "NODE_FUNC_DECL",
         [NODE_STRUCT_DECL] = "NODE_STRUCT_DECL",
         [NODE_ENUM_DECL] = "NODE_ENUM_DECL",
+        [NODE_TYPE_DECL] = "NODE_TYPE_DECL",
         // STATEMENTS
         [NODE_BLOCK] = "NODE_BLOCK",
         [NODE_IF] = "NODE_IF",
@@ -260,13 +261,19 @@ static void print_node_recursive(Node *n) {
     if (n->kind >= NODE_VAR_DECL && n->kind < NODE_COUNT) {
         LOG(INFO, "%zu:%zu @ %s : %s", n->line, n->col, n->path, words[n->kind]);
 
+        bool is_one = true;
+
         // TODO: implement proper printing with names / identifiers / other things
         if (n->next) {
+            is_one = false;
             LOG(INFO, "--- Node linked list print start ---");
             print_node_recursive(n->next);
-        } else {
+        }
+
+        if (!is_one) {
             LOG(INFO, "--- Node linked list print end ---");
         }
+
         return;
     }
 

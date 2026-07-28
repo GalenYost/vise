@@ -119,6 +119,7 @@ typedef enum {
     NODE_FUNC_DECL,
     NODE_STRUCT_DECL,
     NODE_ENUM_DECL,
+    NODE_TYPE_DECL,
 
     // STATEMENTS
     NODE_BLOCK,
