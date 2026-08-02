@@ -51,3 +51,36 @@ In Vise just like in C you can pretty much do whatever you want, no one will for
 
 4. **Decorators**:
    - Built-in and custom decorators should use `PascalCase` to distinguish them from standard functions (e.g., `@ExportAll`, `@Serializable`).
+
+## TODO
+
+### General
+- [ ] Implement test runner (`nob.c`)
+- [ ] Implement proper node printing with names / identifiers / other things (`src/utils.c`)
+
+### Parser
+- [ ] Implement variable / function declaration parsing, `NODE_VAR_DECL` / `NODE_FUNC_DECL` (`parse_var_or_func_decl`, `src/core/parser.c`)
+
+#### Statements
+- [ ] Parse blocks, `NODE_BLOCK`
+- [ ] Parse if statements, `NODE_IF`
+- [ ] Parse while statements, `NODE_WHILE`
+- [ ] Parse for statements, `NODE_FOR`
+- [ ] Parse return statements, `NODE_RETURN`
+- [ ] Parse break statements, `NODE_BREAK`
+- [ ] Parse continue statements, `NODE_CONTINUE`
+- [ ] Parse defer statements, `NODE_DEFER`
+- [ ] Parse expression statements, `NODE_EXPR_STMT`
+- [ ] Parse switch statements, `NODE_SWITCH`
+- [ ] Parse case statements, `NODE_CASE`
+
+#### Expressions
+- [ ] Parse literals, `NODE_LITERAL`
+- [ ] Parse identifiers, `NODE_IDENTIFIER`
+- [ ] Parse binary expressions, `NODE_BINOP`
+- [ ] Parse unary expressions, `NODE_UNARY`
+- [ ] Parse function calls, `NODE_CALL`
+- [ ] Parse member access, `NODE_MEMBER_ACCESS`
+- [ ] Parse index expressions, `NODE_INDEX`
+- [ ] Parse struct initialization, `NODE_STRUCT_INIT`
+- [ ] Parse array initialization, `NODE_ARRAY_INIT`
