@@ -12,8 +12,10 @@ Configuration options for logging in `config.h`:
 
 ```c
 #define ENABLE_LOGS 0             // 1 - enable, 0 - disable
-#define LOG_FILE_PATH "build.log" // generated next to the compiler executable, meaning the path is relative
+#define LOG_FILE_PATH "build.log" // relative to the current working directory
 ```
+
+`ENABLE_LOGS` acts as a compile-time switch: when set to `0`, the `LOG` macro expands to a no-op, so no logging happens at all. When set to `1`, every `LOG` call writes to both the console and the file.
 
 By default, persistent logs are appended to `build.log` in the current working directory of execution.
 Logs are not cleared automatically, so to gather fresh logs and see the result only for last execution - run `./nob clear`
@@ -46,12 +48,18 @@ The primary interface for logging within Vise. This macro automatically writes t
 - **`...`**: Variadic arguments corresponding to format specifiers in `fmt`.
 
 ```c
+#if ENABLE_LOGS
 #define LOG(level, ...) \
     do { \
         log_to_console(level, __VA_ARGS__); \
         log_to_file(level, LOG_FILE_PATH, __VA_ARGS__); \
     } while (0)
+#else
+#define LOG(level, ...) ((void)0)
+#endif
 ```
+
+When `ENABLE_LOGS` is `0`, every `LOG(...)` call is compiled out entirely (expands to `((void)0)`).
 
 ### Functions
 

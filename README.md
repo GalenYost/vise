@@ -32,6 +32,7 @@ For detailed explanations of Vise's design philosophy and internal features, ple
 *   [Language Features](docs/features.md): Deep dives into Decorators, Memory Allocators, Visibilty/Exports, and OOP differences.
 *   [Compiler Phases](docs/compiler.md): Step-by-step breakdown of how the Vise compiler works internally.
 *   [Grammar](docs/grammar.md): Formal EBNF grammar definitions for the Vise language syntax.
+*   [Logging System](docs/logging.md): Overview of the compiler's logging configuration, log levels, and conventions.
 
 ### Naming
 In Vise just like in C you can pretty much do whatever you want, no one will force you to write what is "better", but there are some suggestions that will help in development:

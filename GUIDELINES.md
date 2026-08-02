@@ -3,9 +3,9 @@
 ## Structure
 ```
 .git/
-build/             # Output of the build process (executables, logs, etc.) (might be overwritten by nob.c definition)
-├── vise           # Compiled executable (final output) (might be overwritten by nob.c definition)
-└── build.log      # Build logs
+build/             # Output of the build process (executable) (might be overwritten by nob.c definition)
+└── vise           # Compiled executable (final output) (might be overwritten by nob.c definition)
+build.log          # Log file, written in the current working directory (defined in config.h)
 docs/              # Documentation
 src/               # Source code
 ├── core/
@@ -20,6 +20,7 @@ src/               # Source code
 ├── main.c         # Entry point and main logic
 ├── utils.c        # Utility functions (string, memory, etc.)
 └── utils.h
+config.h           # Compiler configuration constants (build, logging, etc.)
 .gitignore
 GUIDELINES.md      # This file
 LICENSE            # License and copyright information
@@ -38,10 +39,12 @@ P.S not sure if this is the best way of describing and formatting the project st
 
 ### nob.c
 There are a few details to clarify.
-1. constants (define's):
+1. constants (define's) are located in the root `config.h` file:
 - BUILD_FOLDER is created and used to store build / runtime logs, as well as final executable
 - EXEC_NAME is used to create an executable
 - COMPILER_NAME is basically a part of output, kind of an "official" name you could say
+- ENABLE_LOGS toggles the logging system on (1) / off (0)
+- LOG_FILE_PATH is the path where runtime logs get written
 2. struct's:
 - Command - single command, has a `name`, `signature` and `description`, used as an instance to describe compiler commands for visual output for help message
 - Commands - dynamic array of `Command` structs, nothing else to say
@@ -65,7 +68,7 @@ This includes:
 3. DataType struct, structure that is being used in Node structure as a way to give more details on what kind of variable we are holding
 
 ### Lexer
-Header file only exposes `new` and `next` function to create Lexer instance and iterate through Lexer's Token's accordingly.
+Header file only exposes `lexer_new` and `lexer_next` functions to create Lexer instance and iterate through Lexer's Token's accordingly.
 Structure itself contains a `start` point for a Token, `current` point where Lexer is currently at, `line` and `col` to give the exact location and `arena` for memory storing, things like `StringStream` for example.
 Implementation contains `static` helper functions that simplify code readability, they should be straight-forward unless an additional comment is left nearby to explain function better.
 
@@ -82,5 +85,4 @@ The compiler utilizes an Arena Allocator (`arena.c` / `arena.h`) to handle memor
 The `utils.c` and `utils.h` files contain common helper functions utilized across the compiler's codebase. This includes:
 - File I/O operations (e.g., reading source files into memory).
 - String manipulation and formatting.
-- Dynamic array implementations (like the one used for the `Commands` array in the build system).
 - Centralized logging system (see the detailed [Logging Documentation](docs/logging.md)).
