@@ -83,4 +83,4 @@ The `utils.c` and `utils.h` files contain common helper functions utilized acros
 - File I/O operations (e.g., reading source files into memory).
 - String manipulation and formatting.
 - Dynamic array implementations (like the one used for the `Commands` array in the build system).
-- Generic error reporting and logging macros.
+- Centralized logging system (see the detailed [Logging Documentation](docs/logging.md)).
