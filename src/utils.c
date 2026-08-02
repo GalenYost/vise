@@ -200,6 +200,9 @@ void print_token(Token t) {
         [TOKEN_ENUM] = "TOKEN_ENUM",
         [TOKEN_TRUE] = "TOKEN_TRUE",
         [TOKEN_FALSE] = "TOKEN_FALSE",
+        [TOKEN_SWITCH] = "TOKEN_SWITCH",
+        [TOKEN_CASE] = "TOKEN_CASE",
+        [TOKEN_DEFAULT] = "TOKEN_DEFAULT",
         // TYPES
         [TOKEN_CHAR] = "TOKEN_CHAR",
         [TOKEN_INT] = "TOKEN_INT",
@@ -238,7 +241,7 @@ static void print_node_recursive(Node *n) {
         // STATEMENTS
         [NODE_BLOCK] = "NODE_BLOCK",
         [NODE_IF] = "NODE_IF",
-        [NODE_WHITE] = "NODE_WHITE",
+        [NODE_WHILE] = "NODE_WHILE",
         [NODE_FOR] = "NODE_FOR",
         [NODE_RETURN] = "NODE_RETURN",
         [NODE_BREAK] = "NODE_BREAK",
@@ -256,6 +259,8 @@ static void print_node_recursive(Node *n) {
         [NODE_INDEX] = "NODE_INDEX",
         [NODE_STRUCT_INIT] = "NODE_STRUCT_INIT",
         [NODE_ARRAY_INIT] = "NODE_ARRAY_INIT",
+        [NODE_SWITCH] = "NODE_SWITCH",
+        [NODE_CASE] = "NODE_CASE",
     };
 
     if (n->kind >= NODE_VAR_DECL && n->kind < NODE_COUNT) {

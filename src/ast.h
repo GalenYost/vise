@@ -32,6 +32,8 @@ typedef struct MemberAccessNode MemberAccessNode;
 typedef struct IndexNode IndexNode;
 typedef struct StructInitNode StructInitNode;
 typedef struct ArrayInitNode ArrayInitNode;
+typedef struct SwitchNode SwitchNode;
+typedef struct CaseNode CaseNode;
 
 typedef enum {
     // SYMBOLS
@@ -74,6 +76,8 @@ typedef enum {
     TOKEN_STRUCT, TOKEN_TYPE,
     TOKEN_CONST, TOKEN_ENUM,
     TOKEN_TRUE, TOKEN_FALSE,
+    TOKEN_SWITCH, TOKEN_CASE,
+    TOKEN_DEFAULT,
 
     // TYPES
     TOKEN_CHAR,
@@ -124,12 +128,14 @@ typedef enum {
     // STATEMENTS
     NODE_BLOCK,
     NODE_IF,
-    NODE_WHITE, NODE_FOR,
+    NODE_WHILE, NODE_FOR,
     NODE_RETURN, NODE_BREAK,
     NODE_CONTINUE,
     NODE_DEFER,
     NODE_EXPR_STMT,
     NODE_IMPORT,
+    NODE_SWITCH,
+    NODE_CASE,
 
     // EXPRESSIONS
     NODE_LITERAL,
@@ -266,6 +272,17 @@ struct ArrayInitNode {
     size_t element_count;
 };
 
+struct SwitchNode {
+    Node *expr;
+    Node *cases; // Linked list of NODE_CASE
+    size_t case_count;
+};
+
+struct CaseNode {
+    Node *value; // set to NULL in case of `default`
+    Node *body;
+};
+
 struct Node {
     NodeKind kind;
     size_t line;
@@ -296,6 +313,8 @@ struct Node {
         IndexNode index;
         StructInitNode struct_init;
         ArrayInitNode array_init;
+        SwitchNode switch_stmt;
+        CaseNode case_stmt;
     } as;
     bool _comptime;
     Node *next;
