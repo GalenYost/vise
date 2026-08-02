@@ -1,9 +1,7 @@
 #define NOB_IMPLEMENTATION
 #include "nob.h"
 
-#define BUILD_FOLDER "build"
-#define EXEC_NAME "vise"
-#define COMPILER_NAME "Vise"
+#include "config.h"
 
 int ends_with(const char *str, const char *suffix) {
     size_t str_len = strlen(str);
@@ -95,6 +93,18 @@ bool run_compiler(int argc, char **argv) {
     return nob_cmd_run(&cmd);
 }
 
+bool run_clear() {
+    nob_log(INFO, "Running clear");
+    
+    Nob_Cmd cmd = {0};
+
+    nob_cmd_append(&cmd, "rm", "-rf");
+    nob_cmd_append(&cmd, BUILD_FOLDER);
+    nob_cmd_append(&cmd, LOG_FILE_PATH);
+
+    return nob_cmd_run(&cmd);
+}
+
 int main(int argc, char **argv) {
     NOB_GO_REBUILD_URSELF(argc, argv);
 
@@ -117,6 +127,11 @@ int main(int argc, char **argv) {
     if (command(subcmd, &commands, "run", "[args...]", "Build and run the compiler")) {
         if (!build_compiler()) return 1;
         if (!run_compiler(argc, argv)) return 1;
+        return 0;
+    }
+
+    if (command(subcmd, &commands, "clear", "", "Clear previous build")) {
+        if (!run_clear()) return 1;
         return 0;
     }
     
