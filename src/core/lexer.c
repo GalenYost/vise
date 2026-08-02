@@ -398,6 +398,7 @@ static Token identify_keyword(Lexer *lex) {
             else if (strncmp(lex->start, "enum", 4) == 0) type = TOKEN_ENUM;
             else if (strncmp(lex->start, "char", 4) == 0) type = TOKEN_CHAR;
             else if (strncmp(lex->start, "null", 4) == 0) type = TOKEN_NULL;
+            else if (strncmp(lex->start, "case", 4) == 0) type = TOKEN_CASE;
             break;
         case 5:
             if (strncmp(lex->start, "while", 5) == 0) type = TOKEN_WHILE;
@@ -412,6 +413,10 @@ static Token identify_keyword(Lexer *lex) {
             else if (strncmp(lex->start, "import", 6) == 0) type = TOKEN_IMPORT;
             else if (strncmp(lex->start, "static", 6) == 0) type = TOKEN_STATIC;
             else if (strncmp(lex->start, "struct", 6) == 0) type = TOKEN_STRUCT;
+            else if (strncmp(lex->start, "switch", 6) == 0) type = TOKEN_SWITCH;
+            break;
+        case 7:
+            if (strncmp(lex->start, "default", 7) == 0) type = TOKEN_DEFAULT;
             break;
         case 8:
             if (strncmp(lex->start, "continue", 8) == 0) type = TOKEN_CONTINUE;
