@@ -59,8 +59,8 @@ Vise combines the simplicity of C, the modern readability of Java, and the self-
 Basically decorators are macros in a way, but they operate on nodes, not strings, and the type checker runs downstream of
 them, this is exactly perfect to enforce strict rules, while maintaining flexibility of concept as it is.
 
-A nice example of decorators is Zig, but Zig has them built-in using the compile-time metaprogramming.
-Vise uses similar approach, but allows creating custom decorators that will allow better flexibility.
+A nice example of decorators is Zig, which can achieve similar results through compile-time metaprogramming.
+Vise uses the same comptime foundation, but wraps it in dedicated decorator syntax with type checking running downstream of them, which makes them more ergonomic and easier to reason about than raw metaprogramming.
 A few examples:
 ```vz
 import std.tag; // existing in stdlib decorator
@@ -83,7 +83,6 @@ int main(void) {
 ```
 This is perfect system for tagging functions, this will help with embeddability (such as game engines for example) and custom marking of functions, structs or even expressions
 
-How custom decorators will work? Basically they will utilize comptime feature, you add comptime to function which returns what you need.
 Small example:
 ```vz
 import std.meta.StructDecl;
@@ -134,7 +133,7 @@ char*[] get_users() {
 }
 ```
 Those examples are planned to exist in stdlib, but
-hope you get the idea, they work similar to Rust macros and Python decorators, they can extend functionality, but dont create a chaos by enforcing strict AST rules.
+hope you get the idea — they work similar to Rust macros and Python decorators and can extend functionality, with the type checker running downstream of them keeping things strict and predictable.
 
 ### Clarifications on visibility (public/private)
 By default all of the expressions and functions are private, no need to mark them static (unless needed to preserve memory address).
